@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Category, User
+from .models import Category, User, Revenue
 
 admin.site.register(User, UserAdmin)
 
@@ -25,9 +25,15 @@ class BaseOwnerAdmin(admin.ModelAdmin):
         """
         qs = super().get_queryset(request)
         return qs.filter(owner=request.user)
-
+    
 
 @admin.register(Category)
 class CategoryAdmin(BaseOwnerAdmin):
     list_display = ['name', 'created_at', 'updated_at']
     search_fields = ['name']
+
+
+@admin.register(Revenue)
+class RevenueAdmin(BaseOwnerAdmin):
+    list_display =  ['description','value','expired_at','payed_at','created_at','updated_at']
+    search_fields = ['description','value','expired_at',]
