@@ -41,7 +41,7 @@ class BaseModel(models.Model):
 class Category(BaseModel):
     owner = models.ForeignKey(
         'core.User',
-        related_name='owner',
+        related_name='categorias',
         verbose_name='dono',
         on_delete=models.PROTECT,
         editable=False,
@@ -51,3 +51,37 @@ class Category(BaseModel):
     class Meta:
         verbose_name = 'categoria'
         verbose_name_plural = 'categorias'
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Revenue(BaseModel):
+    owner = models.ForeignKey(
+        'core.User',
+        related_name='receitas',
+        verbose_name='dono',
+        on_delete=models.PROTECT,
+        editable=False,
+    )
+    category = models.ForeignKey(
+        'core.Category',
+        related_name='receitas',
+        on_delete=models.PROTECT,
+    )
+    description = models.CharField(
+        'descricao da receita',max_length=30, db_index=True
+    )
+    value = models.DecimalField(
+        'valor da receita', max_digits=10, decimal_places=2
+    )
+    expired_at = models.DateField(
+        'data de vencimento', db_index=True
+    )
+    payed_at = models.DateField(
+        'data do pagamento', db_index=True, null=True
+    )
+
+    class Meta:
+        verbose_name = 'receita'
+        verbose_name_plural = 'receitas'
